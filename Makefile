@@ -1928,10 +1928,12 @@ strip:
 install:
 	install -p -m 644 $(MODULE_NAME).ko  $(MODDESTDIR)
 	/sbin/depmod -a ${KVER}
+	sed -i '/LABEL="modeswitch_rules_end"/i \ # Comfast CF-WU910A - Wifi and Bluetooth \ ATTR{idVendor}=="0bda", ATTR{idProduct}=="1a2b", RUN+="/usr/sbin/usb_modeswitch -K -v 0bda -p 1a2b" \ ' /lib/udev/rules.d/40-usb_modeswitch.rules
 
 uninstall:
 	rm -f $(MODDESTDIR)/$(MODULE_NAME).ko
 	/sbin/depmod -a ${KVER}
+	sed -e '/# Comfast CF-WU910A - Wifi and Bluetooth/,+2d' /lib/udev/rules.d/40-usb_modeswitch.rules
 
 backup_rtlwifi:
 	@echo "Making backup rtlwifi drivers"
